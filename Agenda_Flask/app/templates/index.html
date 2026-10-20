@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agenda de Actividades</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Agenda de Actividades</h1>
+
+        <form action="{{ url_for('agregar') }}" method="POST" class="formulario">
+            <label for="titulo">Título</label>
+            <input type="text" id="titulo" name="titulo" placeholder="Ej. Tarea de IA" required>
+
+            <label for="descripcion">Descripción</label>
+            <input type="text" id="descripcion" name="descripcion" placeholder="Ej. Investigar sobre Flask">
+
+            <label for="fecha">Fecha</label>
+            <input type="date" id="fecha" name="fecha" required>
+
+            <button type="submit" class="btn btn-verde">Guardar actividad</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in actividades %}
+                <tr>
+                    <td>{{ a['id'] }}</td>
+                    <td>{{ a['titulo'] }}</td>
+                    <td>{{ a['fecha'] }}</td>
+                    <td>
+                        <a href="{{ url_for('completar', id=a['id']) }}">
+                            {% if a['completada'] %}Completada{% else %}Pendiente{% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('editar', id=a['id']) }}" class="btn btn-azul">Editar</a>
+                        <a href="{{ url_for('eliminar', id=a['id']) }}" class="btn btn-rojo"
+                           onclick="return confirm('¿Eliminar esta actividad?')">Eliminar</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5">Aún no hay actividades.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
